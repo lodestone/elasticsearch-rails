@@ -397,22 +397,7 @@ module Elasticsearch
         # @see http://rubydoc.info/gems/elasticsearch-api/Elasticsearch/API/Actions:update
         #
         def update_document(options={})
-          if attributes_in_database = self.instance_variable_get(:@__changed_model_attributes).presence
-            attributes = if respond_to?(:as_indexed_json)
-              self.as_indexed_json.select { |k,v| attributes_in_database.keys.map(&:to_s).include? k.to_s }
-            else
-              attributes_in_database
-            end
-
-            client.update(
-              { index: index_name,
-                type:  document_type,
-                id:    self.id,
-                body:  { doc: attributes } }.merge(options)
-            )
-          else
-            index_document(options)
-          end
+          index_document(options)
         end
 
         # Perform a _partial_ update of specific document attributes
